@@ -15,6 +15,9 @@ export default defineConfig(({ mode }) => ({
 	plugins: [
 		analog({
 			ssr: false,
+			nitro: {
+				plugins: ['./plugins/graceful-shutdown.plugin.ts'],
+			},
 			vite: {
 				experimental: { supportAnalogFormat: true },
 			},

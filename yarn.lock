@@ -8620,7 +8620,7 @@ nice-napi@^1.0.2:
     node-addon-api "^3.0.0"
     node-gyp-build "^4.2.2"
 
-nitropack@^2.6.0:
+nitropack@^2.6.0, nitropack@^2.9.5:
   version "2.9.5"
   resolved "https://registry.yarnpkg.com/nitropack/-/nitropack-2.9.5.tgz#08acda42069d53521976e8bd94cbfd88b479c8b0"
   integrity sha512-ClanSILi9O6HX95QNIC+TwxojpRpOSn9n3e3wmHExAHhLN5HdnHGmHN4LwtJdE2p91nse3kDULOTR7k1xRVJ/g==
