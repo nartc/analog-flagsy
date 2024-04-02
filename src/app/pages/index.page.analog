@@ -1,50 +1,56 @@
 <script lang="ts">
-  import { HttpClient } from '@angular/common/http';
-  import { effect, inject } from '@angular/core';
+import { injectLoad } from '@analogjs/router';
+import { HttpClient } from '@angular/common/http';
+import { effect, inject } from '@angular/core';
+import type { load } from './index.server';
 
-  const http = inject(HttpClient);
+const http = inject(HttpClient);
+const data = injectLoad<typeof load>();
 
-  effect((onCleanup) => {
-    const sub = http.get('/api/v1/hello').subscribe(console.log);
-    onCleanup(() => sub.unsubscribe());
-  });
+effect((onCleanup) => {
+	const sub = http.get('/api/users').subscribe(console.log);
 
-  let count = 0;
+	sub.add(data.subscribe(console.log.bind(console, 'hey there-->')));
 
-  function increment() {
-    count++;
-  }
+	onCleanup(() => sub.unsubscribe());
+});
+
+let count = 0;
+
+function increment() {
+	count++;
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://analogjs.org/" target="_blank">
-      <img alt="Analog Logo" class="logo analog" src="/analog.svg" />
-    </a>
-  </div>
+	<div>
+		<a href="https://analogjs.org/" target="_blank">
+			<img alt="Analog Logo" class="logo analog" src="/analog.svg" />
+		</a>
+	</div>
 
-  <h2>Analog</h2>
+	<h2>Analog</h2>
 
-  <h3>The fullstack meta-framework for Angular!</h3>
+	<h3>The fullstack meta-framework for Angular!</h3>
 
-  <div class="card">
-    <button type="button" (click)="increment()">Count {{ count }}</button>
-  </div>
+	<div class="card">
+		<button type="button" (click)="increment()">Count {{ count }}</button>
+	</div>
 
-  <p class="read-the-docs">
-    For guides on how to customize this project, visit the
-    <a href="https://analogjs.org" target="_blank">Analog documentation</a>
-  </p>
+	<p class="read-the-docs">
+		For guides on how to customize this project, visit the
+		<a href="https://analogjs.org" target="_blank">Analog documentation</a>
+	</p>
 </template>
 
 <style>
-  .logo {
-    will-change: filter;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
+.logo {
+	will-change: filter;
+}
+.logo:hover {
+	filter: drop-shadow(0 0 2em #646cffaa);
+}
+.read-the-docs {
+	color: #888;
+}
 </style>
