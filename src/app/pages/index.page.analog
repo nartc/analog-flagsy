@@ -1,17 +1,12 @@
 <script lang="ts">
-import { injectLoad } from '@analogjs/router';
 import { HttpClient } from '@angular/common/http';
 import { effect, inject } from '@angular/core';
-import type { load } from './index.server';
+import type { User } from '@prisma/client';
 
 const http = inject(HttpClient);
-const data = injectLoad<typeof load>();
 
 effect((onCleanup) => {
-	const sub = http.get('/api/users').subscribe(console.log);
-
-	sub.add(data.subscribe(console.log.bind(console, 'hey there-->')));
-
+	const sub = http.get<User[]>('/api/users').subscribe(console.log);
 	onCleanup(() => sub.unsubscribe());
 });
 
