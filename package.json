@@ -40,11 +40,14 @@
 	"devDependencies": {
 		"@analogjs/platform": "^1.0.0",
 		"@analogjs/vite-plugin-angular": "^1.0.0",
+		"@angular-devkit/build-angular": "^17.3.2",
 		"@angular/cli": "^17.2.0",
 		"@angular/compiler-cli": "^17.2.0",
+		"@ngtools/webpack": "^17.3.2",
 		"@nx/vite": "~18.0.0",
 		"autoprefixer": "^10.4.14",
 		"jsdom": "^22.1.0",
+		"mini-svg-data-uri": "^1.4.4",
 		"nx": "~18.0.0",
 		"postcss": "^8.4.21",
 		"prettier": "^3.2.5",
@@ -62,6 +65,14 @@
 		"plugins": [
 			"prettier-plugin-organize-imports",
 			"prettier-plugin-tailwindcss"
+		],
+		"overrides": [
+			{
+				"files": "*.analog",
+				"options": {
+					"parser": "vue"
+				}
+			}
 		]
 	}
 }
