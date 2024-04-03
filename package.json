@@ -18,6 +18,7 @@
     "@analogjs/content": "^1.0.0",
     "@analogjs/router": "^1.0.0",
     "@angular/animations": "^17.2.0",
+    "@angular/cdk": "^17.3.2",
     "@angular/common": "^17.2.0",
     "@angular/compiler": "^17.2.0",
     "@angular/core": "^17.2.0",
@@ -26,8 +27,15 @@
     "@angular/platform-browser-dynamic": "^17.2.0",
     "@angular/platform-server": "^17.2.0",
     "@angular/router": "^17.2.0",
+    "@ngneat/hot-toast": "^7.0.0",
+    "@ngneat/overview": "^6.0.0",
+    "@ngx-loading-bar/core": "^6.0.2",
+    "@ngx-loading-bar/router": "^6.0.2",
     "@nx/angular": "~18.0.0",
     "@prisma/client": "5.11.0",
+    "@tanstack/angular-form": "^0.19.0",
+    "@tanstack/zod-form-adapter": "^0.19.0",
+    "angular-remix-icon": "^5.1.0",
     "front-matter": "^4.0.2",
     "marked": "^5.0.2",
     "marked-gfm-heading-id": "^3.1.0",
@@ -36,6 +44,7 @@
     "prismjs": "^1.29.0",
     "rxjs": "~7.5.6",
     "tslib": "^2.4.0",
+    "zod": "^3.22.4",
     "zone.js": "~0.14.0"
   },
   "devDependencies": {
@@ -78,7 +87,7 @@
       {
         "files": "*.analog",
         "options": {
-          "parser": "vue"
+          "parser": "angular"
         }
       }
     ]

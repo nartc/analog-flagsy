@@ -1,16 +1,13 @@
 <script lang="ts">
 import { RouterOutlet } from '@angular/router' with { analog: 'imports' };
+import { LoadingBarModule } from '@ngx-loading-bar/core' with { analog: 'imports' };
 </script>
 
 <template>
 	<router-outlet />
+	<ngx-loading-bar
+		color="hsl(165, 84%, 39%)"
+		height="3px"
+		[includeSpinner]="false"
+	/>
 </template>
-
-<style>
-:host {
-	max-width: 1280px;
-	margin: 0 auto;
-	padding: 2rem;
-	text-align: center;
-}
-</style>

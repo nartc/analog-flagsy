@@ -1,0 +1,156 @@
+<script lang="ts">
+	import { injectForm } from '@tanstack/angular-form';
+	import { zodValidator } from '@tanstack/zod-form-adapter';
+
+	import { TanStackField } from '@tanstack/angular-form' with { analog: 'imports' };
+	import {
+		emailValidator,
+		passwordValidator,
+	} from '../utils/forms.schema' with { analog: 'exposes' };
+
+	const form = injectForm({
+		defaultValues: { email: '', password: '', rememberMe: false },
+		validatorAdapter: zodValidator,
+	});
+
+	function handleSubmit(event: SubmitEvent) {
+		event.preventDefault();
+		event.stopPropagation();
+
+		console.log(form);
+	}
+</script>
+
+<template>
+	<div class="grid h-screen grid-cols-1 md:grid-cols-2">
+		<section class="hidden h-full w-full bg-primary-500 md:block"></section>
+		<section class="flex items-center justify-center">
+			<div class="flex flex-col">
+				<header class="flex flex-col items-center justify-center gap-6">
+					<img src="/images/logo-full.svg" alt="Flagsy" class="h-10" />
+					<div class="flex flex-col items-center gap-2">
+						<h2 class="text-3xl font-bold">Welcome Back!</h2>
+						<p>Please login to continue</p>
+					</div>
+				</header>
+
+				<form
+					class="flex min-h-0 w-96 max-w-lg flex-auto flex-col gap-4 overflow-y-auto p-6"
+					(submit)="handleSubmit($event)"
+				>
+					<div
+						class="flex flex-col gap-2"
+						[tanstackField]="form"
+						[validators]="{ onBlur: emailValidator }"
+						name="email"
+						#email="field"
+					>
+						<label for="email" class="text-sm font-medium">Email</label>
+						<input
+							id="email"
+							type="text"
+							class="rounded-lg border p-2 text-sm transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+							[class]="
+								email.api.state.meta.errors.length
+									? 'ring-2 ring-red-500 ring-offset-2 focus:ring-red-500'
+									: ''
+							"
+							placeholder="abc@xyz.io"
+							[name]="email.name"
+							[value]="email.api.state.value"
+							(blur)="email.api.handleBlur()"
+							(input)="email.api.handleChange($event.target['value'])"
+						/>
+
+						@if (email.api.state.meta.errors.length) {
+							<ul>
+								@for (error of email.api.state.meta.errors; track error) {
+									<li>
+										<small class="text-sm text-red-500">
+											{{ error }}
+										</small>
+									</li>
+								}
+							</ul>
+						}
+					</div>
+
+					<div
+						class="flex flex-col gap-2"
+						[tanstackField]="form"
+						[validators]="{ onBlur: passwordValidator }"
+						name="password"
+						#password="field"
+					>
+						<label for="password" class="text-sm font-medium">Password</label>
+						<input
+							id="password"
+							type="password"
+							class="rounded-lg border p-2 text-sm transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+							[class]="
+								password.api.state.meta.errors.length
+									? 'ring-2 ring-red-500 ring-offset-2 focus:ring-red-500'
+									: ''
+							"
+							placeholder="********"
+							[name]="password.name"
+							[value]="password.api.state.value"
+							(blur)="password.api.handleBlur()"
+							(input)="password.api.handleChange($event.target['value'])"
+						/>
+						@if (password.api.state.meta.errors.length) {
+							<ul>
+								@for (error of password.api.state.meta.errors; track error) {
+									<li>
+										<small class="text-sm text-red-500">
+											{{ error }}
+										</small>
+									</li>
+								}
+							</ul>
+						}
+					</div>
+
+					<footer
+						class="flex items-center justify-between text-xs font-semibold"
+					>
+						<div
+							class="flex items-center gap-2"
+							[tanstackField]="form"
+							name="rememberMe"
+							#rememberMe="field"
+						>
+							<input
+								id="rememberMe"
+								type="checkbox"
+								[checked]="rememberMe.api.state.value"
+								(change)="rememberMe.api.handleChange($event.target['checked'])"
+							/>
+							<label for="rememberMe" class="text-sm font-medium">
+								Remember Me
+							</label>
+						</div>
+						<div class="text-primary-500">
+							<a class="link" href="/signup">Forgot Password?</a>
+						</div>
+					</footer>
+
+					<button
+						type="submit"
+						class="rounded-lg bg-primary-500 px-1 py-2 text-sm font-medium text-white"
+					>
+						Login
+					</button>
+				</form>
+				<footer class="flex justify-center">
+					<div class="flex gap-1 text-xs">
+						<span>Don't have an account?</span>
+						<span class="font-semibold text-primary-500">
+							<a class="link" href="/signup">Create Account</a>
+						</span>
+					</div>
+				</footer>
+			</div>
+		</section>
+	</div>
+</template>
