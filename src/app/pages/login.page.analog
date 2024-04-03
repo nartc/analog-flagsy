@@ -16,8 +16,6 @@
 	function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		event.stopPropagation();
-
-		console.log(form);
 	}
 </script>
 
