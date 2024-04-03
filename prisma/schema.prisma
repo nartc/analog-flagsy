@@ -11,27 +11,32 @@ datasource db {
 }
 
 model User {
-  id           String        @id @default(cuid())
-  email        String        @unique
-  firstName     String
-  lastName     String
-  password     String
-  role         String          @default("ADMIN")
-  orgs         Org[]
+  id        String @id @default(cuid())
+  email     String @unique
+  firstName String
+  lastName  String
+  password  String
 
-  createdAt         DateTime           @default(now())
-  updatedAt         DateTime           @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Membership {
+  userId String @unique
+  orgId  String
+  role   String
+  Org    Org    @relation(fields: [orgId], references: [id])
 }
 
 model Org {
-  id           String        @id @default(cuid())
-  name         String
-  key          String
-  members      User[]
+  id      String       @id @default(cuid())
+  name    String
+  key     String
+  members Membership[]
   // projects     Project[]
   // environments Environment[]
   // features     Feature[]
 
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

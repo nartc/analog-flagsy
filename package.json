@@ -27,6 +27,8 @@
     "@angular/platform-browser-dynamic": "^17.2.0",
     "@angular/platform-server": "^17.2.0",
     "@angular/router": "^17.2.0",
+    "@casl/ability": "^6.7.1",
+    "@casl/prisma": "^1.4.1",
     "@ngneat/hot-toast": "^7.0.0",
     "@ngneat/overview": "^6.0.0",
     "@ngx-loading-bar/core": "^6.0.2",

@@ -1,6 +1,9 @@
 /// <reference types="vite/client" />
 
-// Uncomment the lines below to enable types for experimental .analog format support
+import type { Type } from '@angular/core';
+import type { User } from '@prisma/client';
+import type { AppAbility } from './server/abilities/app-ability.server';
+
 interface ImportAttributes {
 	analog: 'imports' | 'providers' | 'viewProviders' | 'exposes';
 }
@@ -36,6 +39,13 @@ declare global {
 }
 
 declare module '*.analog' {
-	const cmp = any;
+	declare const cmp: Type<any>;
 	export default cmp;
+}
+
+declare module 'h3' {
+	interface H3EventContext {
+		user?: User;
+		ability?: AppAbility;
+	}
 }

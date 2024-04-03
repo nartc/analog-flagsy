@@ -1,20 +1,20 @@
 <script lang="ts">
-import { HttpClient } from '@angular/common/http';
-import { effect, inject } from '@angular/core';
-import type { User } from '@prisma/client';
+	import { HttpClient } from '@angular/common/http';
+	import { effect, inject } from '@angular/core';
+	import type { User } from '@prisma/client';
 
-const http = inject(HttpClient);
+	const http = inject(HttpClient);
 
-effect((onCleanup) => {
-	const sub = http.get<User[]>('/api/users').subscribe(console.log);
-	onCleanup(() => sub.unsubscribe());
-});
+	effect((onCleanup) => {
+		const sub = http.get<User[]>('/api/users/me').subscribe(console.log);
+		onCleanup(() => sub.unsubscribe());
+	});
 
-let count = 0;
+	let count = 0;
 
-function increment() {
-	count++;
-}
+	function increment() {
+		count++;
+	}
 </script>
 
 <template>
@@ -39,13 +39,13 @@ function increment() {
 </template>
 
 <style>
-.logo {
-	will-change: filter;
-}
-.logo:hover {
-	filter: drop-shadow(0 0 2em #646cffaa);
-}
-.read-the-docs {
-	color: #888;
-}
+	.logo {
+		will-change: filter;
+	}
+	.logo:hover {
+		filter: drop-shadow(0 0 2em #646cffaa);
+	}
+	.read-the-docs {
+		color: #888;
+	}
 </style>
