@@ -1,7 +1,6 @@
 /// <reference types="vite/client" />
 
 import type { Type } from '@angular/core';
-import type { User } from '@prisma/client';
 import type { AppAbility } from './server/abilities/app-ability.server';
 
 interface ImportAttributes {
@@ -45,7 +44,13 @@ declare module '*.analog' {
 
 declare module 'h3' {
 	interface H3EventContext {
-		user?: User;
+		user?: {
+			id: string;
+			email: string;
+			firstName: string;
+			lastName: string;
+			memberships: { orgId: string; role: string }[];
+		};
 		ability?: AppAbility;
 	}
 }

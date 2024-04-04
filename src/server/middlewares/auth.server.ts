@@ -1,27 +1,34 @@
-import type { User } from '@prisma/client';
-import { createError, defineEventHandler } from 'h3';
+import { createError, defineEventHandler, getCookie } from 'h3';
 import { defineUserAbilities } from '../abilities/user-abilities.server';
+import { prisma } from '../prisma';
+import { verifyJwt } from '../utilities/auth.server';
 
-export default defineEventHandler({
-	handler: async (event) => {
-		// const accessToken = getCookie(event, 'accessToken');
-		// if (!accessToken) {
-		// 	throw createError({ status: 401, message: 'Unauthorized' });
-		// }
+export const authMiddleware = () =>
+	defineEventHandler({
+		handler: async (event) => {
+			const accessToken = getCookie(event, 'accessToken');
+			if (!accessToken) {
+				throw createError({ status: 401, message: 'Unauthorized' });
+			}
 
-		/* parse the token get the user id from the token */ const userId = '';
+			const { id } = verifyJwt<{ id: string }>(accessToken);
 
-		// const user = await prisma.user.findFirst({
-		// 	where: { id: userId },
-		// });
+			const user = await prisma.user.findUnique({
+				where: { id },
+				select: {
+					id: true,
+					email: true,
+					firstName: true,
+					lastName: true,
+					memberships: { select: { role: true, orgId: true } },
+				},
+			});
 
-		const user = { id: '123', firstName: 'Chau' } as User;
+			if (!user) {
+				throw createError({ status: 401, message: 'Unauthorized' });
+			}
 
-		if (!user) {
-			throw createError({ status: 401, message: 'Unauthorized' });
-		}
-
-		event.context.user = user;
-		event.context.ability = defineUserAbilities(user);
-	},
-});
+			event.context.user = user;
+			event.context.ability = defineUserAbilities(user.id);
+		},
+	});

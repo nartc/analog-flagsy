@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { HttpClient } from '@angular/common/http';
+	import { inject } from '@angular/core';
 	import { injectForm } from '@tanstack/angular-form';
 	import { zodValidator } from '@tanstack/zod-form-adapter';
 
@@ -8,6 +10,8 @@
 		passwordValidator,
 	} from '../utils/forms.schema' with { analog: 'exposes' };
 
+	const http = inject(HttpClient);
+
 	const form = injectForm({
 		defaultValues: { email: '', password: '', rememberMe: false },
 		validatorAdapter: zodValidator,
@@ -16,6 +20,10 @@
 	function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		event.stopPropagation();
+
+		http.post('/api/users/login', form.state.values).subscribe((response) => {
+			console.log(response);
+		});
 	}
 </script>
 

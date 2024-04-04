@@ -1,12 +1,32 @@
 <script lang="ts">
 	import { HttpClient } from '@angular/common/http';
 	import { effect, inject } from '@angular/core';
-	import type { User } from '@prisma/client';
+	import { subject } from '@casl/ability';
+	import type { Org } from '@prisma/client';
+	import { injectAppAbility } from '../utils/inject-app-ability';
 
 	const http = inject(HttpClient);
+	const ability = injectAppAbility();
 
 	effect((onCleanup) => {
-		const sub = http.get<User[]>('/api/users/me').subscribe(console.log);
+		const sub = http
+			.get('/api/users/me', { withCredentials: true })
+			.subscribe((user) => {
+				console.log(user, ability);
+				ability.update(user['abilities']);
+
+				console.log(
+					ability.can(
+						'update',
+						subject('Org', {
+							id: '123',
+							name: 'My Org',
+							key: 'my-org',
+							members: [{ userId: '123', role: 'ADMIN' }],
+						} as Org),
+					),
+				);
+			});
 		onCleanup(() => sub.unsubscribe());
 	});
 

@@ -1,12 +1,18 @@
-import type { User } from '@prisma/client';
 import { createAbilityBuilder } from './app-ability.server';
 
-export function defineUserAbilities(user: User) {
+export function defineUserAbilities(userId: string) {
 	const { can, cannot, build } = createAbilityBuilder();
 
-	can('read', 'Org', { members: { some: { userId: user.id } } });
-	can('update', 'Org', {
-		members: { some: { userId: user.id, role: 'ADMIN' } },
+	// every member can read the org
+	can('read', 'Org', { members: { some: { userId } } });
+	// member can only update the members field if they're not in the members list
+	// when then accept an invite
+	can('update', 'Org', 'members', {
+		members: { none: { userId } },
+	});
+	// org admin can manage the org
+	can('manage', 'Org', {
+		members: { some: { AND: [{ userId }, { role: 'ADMIN' }] } },
 	});
 
 	return build();
