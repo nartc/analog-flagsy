@@ -2,7 +2,7 @@ import { createError, defineEventHandler } from 'h3';
 import { authMiddleware } from '../../middlewares/auth.server';
 import { assertCondition } from '../../utilities/assert-condition.server';
 
-export default defineEventHandler({
+const meHandler = defineEventHandler({
 	onRequest: [authMiddleware()],
 	handler: async (event) => {
 		assertCondition(
@@ -17,3 +17,7 @@ export default defineEventHandler({
 		});
 	},
 });
+
+export type MeHandlerResponse = Awaited<ReturnType<typeof meHandler>>;
+
+export default meHandler;

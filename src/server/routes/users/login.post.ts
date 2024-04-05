@@ -15,7 +15,7 @@ const loginSchema = z.object({
 	password: z.string(),
 });
 
-export default defineEventHandler({
+const loginHandler = defineEventHandler({
 	handler: async (event) => {
 		const { email, password } = await readValidatedBody(
 			event,
@@ -51,3 +51,7 @@ export default defineEventHandler({
 		return { refreshJwt };
 	},
 });
+
+export type LoginHandlerResponse = Awaited<ReturnType<typeof loginHandler>>;
+
+export default loginHandler;

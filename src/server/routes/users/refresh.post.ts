@@ -18,7 +18,7 @@ const refreshSchema = z.object({
 	refreshToken: z.string(),
 });
 
-export default defineEventHandler({
+const refreshHandler = defineEventHandler({
 	onRequest: [authMiddleware()],
 	handler: async (event) => {
 		assertCondition(event.context.user != null, () => {
@@ -60,3 +60,7 @@ export default defineEventHandler({
 		return { refreshJwt };
 	},
 });
+
+export type RefreshHandlerResponse = Awaited<ReturnType<typeof refreshHandler>>;
+
+export default refreshHandler;

@@ -1,6 +1,34 @@
 <script lang="ts">
-import { RouterOutlet } from '@angular/router' with { analog: 'imports' };
-import { LoadingBarModule } from '@ngx-loading-bar/core' with { analog: 'imports' };
+	import { HttpClient } from '@angular/common/http';
+	import { effect, inject } from '@angular/core';
+	import type { MeHandlerResponse } from '../server/routes/users/me.get';
+	import { AuthStore } from './stores/auth.store';
+	import { injectAppAbility } from './utils/inject-app-ability';
+
+	import { RouterOutlet } from '@angular/router' with { analog: 'imports' };
+	import { LoadingBarModule } from '@ngx-loading-bar/core' with { analog: 'imports' };
+
+	const http = inject(HttpClient);
+	const authStore = inject(AuthStore);
+	const appAbility = injectAppAbility();
+
+	effect((onCleanup) => {
+		const sub = http
+			.get<MeHandlerResponse>('/api/users/me', { withCredentials: true })
+			.subscribe({
+				next: (user) => {
+					authStore.setMe(user);
+					appAbility.update(user.abilities);
+				},
+				error: (err) => {
+					console.log(err);
+					authStore.setMe(null!);
+					appAbility.update([]);
+				},
+			});
+
+		onCleanup(sub.unsubscribe.bind(sub));
+	});
 </script>
 
 <template>

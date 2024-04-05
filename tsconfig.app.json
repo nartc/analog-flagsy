@@ -9,6 +9,8 @@
 	"include": [
 		"src/**/*.d.ts",
 		"src/app/routes/**/*.ts",
-		"src/app/pages/**/*.page.ts"
+		"src/app/pages/**/*.page.ts",
+    "src/app/pages/**/*.page.analog",
+    "src/app/**/*.analog"
 	]
 }

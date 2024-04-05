@@ -1,8 +1,13 @@
 <script lang="ts">
+	import type { RouteMeta } from '@analogjs/router';
 	import { HttpClient } from '@angular/common/http';
-	import { inject } from '@angular/core';
-	import { injectForm } from '@tanstack/angular-form';
+	import { inject, signal } from '@angular/core';
+	import { injectForm, injectStore } from '@tanstack/angular-form';
 	import { zodValidator } from '@tanstack/zod-form-adapter';
+	import type { LoginHandlerResponse } from '../../server/routes/users/login.post';
+	import { AuthStore } from '../stores/auth.store';
+	import type { FlagsyHttpErrorResponse } from '../utils/http-error-response';
+	import { routeTitle } from '../utils/route-title';
 
 	import { TanStackField } from '@tanstack/angular-form' with { analog: 'imports' };
 	import {
@@ -10,20 +15,36 @@
 		passwordValidator,
 	} from '../utils/forms.schema' with { analog: 'exposes' };
 
+	export const routeMeta: RouteMeta = {
+		title: routeTitle('Login'),
+	};
+
 	const http = inject(HttpClient);
+	const authStore = inject(AuthStore);
 
 	const form = injectForm({
 		defaultValues: { email: '', password: '', rememberMe: false },
 		validatorAdapter: zodValidator,
 	});
 
+	const canSubmit = injectStore(form, (state) => state.canSubmit);
+	const isSubmitting = injectStore(form, (state) => state.isSubmitting);
+	const formError = signal('');
+
 	function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
 		event.stopPropagation();
 
-		http.post('/api/users/login', form.state.values).subscribe((response) => {
-			console.log(response);
-		});
+		http
+			.post<LoginHandlerResponse>('/api/users/login', form.state.values)
+			.subscribe({
+				next: ({ refreshJwt }) => {
+					authStore.setToken(refreshJwt);
+				},
+				error: (err: FlagsyHttpErrorResponse) => {
+					formError.set(err.error.message);
+				},
+			});
 	}
 </script>
 
@@ -37,6 +58,9 @@
 					<div class="flex flex-col items-center gap-2">
 						<h2 class="text-3xl font-bold">Welcome Back!</h2>
 						<p>Please login to continue</p>
+						@if (formError(); as formError) {
+							<p class="text-sm text-red-500">{{ formError }}</p>
+						}
 					</div>
 				</header>
 
@@ -143,9 +167,11 @@
 
 					<button
 						type="submit"
-						class="rounded-lg bg-primary-500 px-1 py-2 text-sm font-medium text-white"
+						class="rounded-lg bg-primary-500 px-1 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out disabled:bg-primary-300"
+						[class.cursor-not-allowed]="!canSubmit()"
+						[disabled]="!canSubmit()"
 					>
-						Login
+						{{ isSubmitting() ? '...' : 'Login' }}
 					</button>
 				</form>
 				<footer class="flex justify-center">
