@@ -4,7 +4,7 @@ import { authMiddleware } from '../../middlewares/auth.server';
 import { prisma } from '../../prisma';
 import { assertCondition } from '../../utilities/assert-condition.server';
 
-export default defineEventHandler({
+const orgsHandler = defineEventHandler({
 	onRequest: [authMiddleware(), abilityMiddleware('read', 'Org')],
 	handler: async (event) => {
 		assertCondition(event.context.user != null, () => {
@@ -24,3 +24,7 @@ export default defineEventHandler({
 		return { organizations };
 	},
 });
+
+export type OrgsHandlerResponse = Awaited<ReturnType<typeof orgsHandler>>;
+
+export default orgsHandler;

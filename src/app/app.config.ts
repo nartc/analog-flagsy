@@ -17,10 +17,7 @@ export const appConfig: ApplicationConfig = {
 		provideHttpClient(withFetch()),
 		provideAnimationsAsync(),
 		provideRemixIcon(ICONS),
-		provideHotToastConfig({
-			role: 'status',
-			theme: 'toast',
-		}),
+		provideHotToastConfig({ role: 'status', theme: 'toast' }),
 		importProvidersFrom(LoadingBarRouterModule),
 	],
 };
