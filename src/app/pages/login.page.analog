@@ -9,11 +9,16 @@
 	import type { FlagsyHttpErrorResponse } from '../utils/http-error-response';
 	import { routeTitle } from '../utils/route-title';
 
+	import { ButtonModule } from 'primeng/button' with { analog: 'imports' };
+	import { CheckboxModule } from 'primeng/checkbox' with { analog: 'imports' };
+	import { InputTextModule } from 'primeng/inputtext' with { analog: 'imports' };
+	import { RippleModule } from 'primeng/ripple' with { analog: 'imports' };
 	import { TanStackField } from '@tanstack/angular-form' with { analog: 'imports' };
 	import {
 		emailValidator,
 		passwordValidator,
 	} from '../utils/forms.schema' with { analog: 'exposes' };
+	import FormErrors from '../components/form-errors.analog' with { analog: 'imports' };
 
 	export const routeMeta: RouteMeta = {
 		title: routeTitle('Login'),
@@ -27,7 +32,10 @@
 		validatorAdapter: zodValidator,
 	});
 
+	form.mount();
+
 	const canSubmit = injectStore(form, (state) => state.canSubmit);
+	const isTouched = injectStore(form, (state) => state.isTouched);
 	const isSubmitting = injectStore(form, (state) => state.isSubmitting);
 	const formError = signal('');
 
@@ -50,7 +58,10 @@
 
 <template>
 	<div class="grid h-screen grid-cols-1 md:grid-cols-2">
-		<section class="hidden h-full w-full bg-primary-500 md:block"></section>
+		<section
+			class="hidden h-full w-full md:block"
+			style="background-color: var(--primary-color)"
+		></section>
 		<section class="flex items-center justify-center">
 			<div class="flex flex-col">
 				<header class="flex flex-col items-center justify-center gap-6">
@@ -77,32 +88,20 @@
 					>
 						<label for="email" class="text-sm font-medium">Email</label>
 						<input
+							pInputText
 							id="email"
 							type="text"
-							class="rounded-lg border p-2 text-sm transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
-							[class]="
-								email.api.state.meta.errors.length
-									? 'ring-2 ring-red-500 ring-offset-2 focus:ring-red-500'
-									: ''
-							"
 							placeholder="abc@xyz.io"
+							[class]="
+								email.api.state.meta.errors.length ? 'ng-invalid ng-dirty' : ''
+							"
 							[name]="email.name"
 							[value]="email.api.state.value"
 							(blur)="email.api.handleBlur()"
 							(input)="email.api.handleChange($event.target['value'])"
 						/>
 
-						@if (email.api.state.meta.errors.length) {
-							<ul>
-								@for (error of email.api.state.meta.errors; track error) {
-									<li>
-										<small class="text-sm text-red-500">
-											{{ error }}
-										</small>
-									</li>
-								}
-							</ul>
-						}
+						<FormErrors [errors]="email.api.state.meta.errors" />
 					</div>
 
 					<div
@@ -114,65 +113,53 @@
 					>
 						<label for="password" class="text-sm font-medium">Password</label>
 						<input
+							pInputText
 							id="password"
 							type="password"
-							class="rounded-lg border p-2 text-sm transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+							placeholder="********"
 							[class]="
 								password.api.state.meta.errors.length
-									? 'ring-2 ring-red-500 ring-offset-2 focus:ring-red-500'
+									? 'ng-invalid ng-dirty'
 									: ''
 							"
-							placeholder="********"
 							[name]="password.name"
 							[value]="password.api.state.value"
 							(blur)="password.api.handleBlur()"
 							(input)="password.api.handleChange($event.target['value'])"
 						/>
-						@if (password.api.state.meta.errors.length) {
-							<ul>
-								@for (error of password.api.state.meta.errors; track error) {
-									<li>
-										<small class="text-sm text-red-500">
-											{{ error }}
-										</small>
-									</li>
-								}
-							</ul>
-						}
+						<FormErrors [errors]="password.api.state.meta.errors" />
 					</div>
 
 					<footer
 						class="flex items-center justify-between text-xs font-semibold"
 					>
-						<div
-							class="flex items-center gap-2"
+						<ng-container
 							[tanstackField]="form"
-							name="rememberMe"
 							#rememberMe="field"
+							name="rememberMe"
 						>
-							<input
-								id="rememberMe"
-								type="checkbox"
-								[checked]="rememberMe.api.state.value"
-								(change)="rememberMe.api.handleChange($event.target['checked'])"
+							<p-checkbox
+								label="Remember Me"
+								[value]="rememberMe.api.state.value"
+								[binary]="true"
+								(onChange)="rememberMe.api.handleChange($event.checked)"
 							/>
-							<label for="rememberMe" class="text-sm font-medium">
-								Remember Me
-							</label>
-						</div>
+						</ng-container>
+
 						<div class="text-primary-500">
 							<a class="link" href="/signup">Forgot Password?</a>
 						</div>
 					</footer>
 
 					<button
+						pButton
+						pRipple
 						type="submit"
-						class="rounded-lg bg-primary-500 px-1 py-2 text-sm font-medium text-white transition-all duration-200 ease-in-out disabled:bg-primary-300"
 						[class.cursor-not-allowed]="!canSubmit()"
-						[disabled]="!canSubmit()"
-					>
-						{{ isSubmitting() ? '...' : 'Login' }}
-					</button>
+						[disabled]="!isTouched() || (isTouched() && !canSubmit())"
+						[label]="isSubmitting() ? '...' : 'Login'"
+						size="small"
+					></button>
 				</form>
 				<footer class="flex justify-center">
 					<div class="flex gap-1 text-xs">

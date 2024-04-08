@@ -1,77 +1,78 @@
-@import '@angular/cdk/overlay-prebuilt.css';
-@import '../node_modules/@ngneat/hot-toast/src/styles/styles.css';
+/*@import '@angular/cdk/overlay-prebuilt.css';*/
 
-/* Tailwind directives  */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@layer tailwind-base, primeng, tailwind-utilities;
 
-/* You can add global styles to this file, and also import other style files */
-:root {
-	--primary: #064e41;
+@import 'primeng/resources/themes/lara-light-blue/theme.css';
+@import 'primeng/resources/primeng.css';
+
+@layer tailwind-base {
+	@tailwind base;
+}
+
+@layer tailwind-utilities {
+	@tailwind components;
+	@tailwind utilities;
 }
 
 * {
 	font-family: 'Manrope', sans-serif;
-	letter-spacing: 0.5px;
-	outline: none;
 }
 
 svg {
 	pointer-events: none;
 }
 
-@layer components {
-	.focus-visible-outline {
-		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;
-	}
+/*@layer components {*/
+/*	.focus-visible-outline {*/
+/*		@apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2;*/
+/*	}*/
 
-	.link {
-		@apply decoration-wavy decoration-1 underline-offset-2;
+/*	.link {*/
+/*		@apply decoration-wavy decoration-1 underline-offset-2;*/
 
-		&:focus,
-		&:hover {
-			@apply text-primary-500 underline;
-		}
-	}
+/*		&:focus,*/
+/*		&:hover {*/
+/*			@apply text-primary-500 underline;*/
+/*		}*/
+/*	}*/
 
-	input[type='number'] {
-		-moz-appearance: textfield;
-		appearance: textfield;
-		&::-webkit-outer-spin-button,
-		&::-webkit-inner-spin-button {
-			-webkit-appearance: none;
-			appearance: none;
-			margin: 0;
-		}
-	}
-	.page-content {
-		@apply min-h-0 flex-auto p-4;
-	}
-}
+/*	input[type='number'] {*/
+/*		-moz-appearance: textfield;*/
+/*		appearance: textfield;*/
+/*		&::-webkit-outer-spin-button,*/
+/*		&::-webkit-inner-spin-button {*/
+/*			-webkit-appearance: none;*/
+/*			appearance: none;*/
+/*			margin: 0;*/
+/*		}*/
+/*	}*/
+/*	.page-content {*/
+/*		@apply min-h-0 flex-auto p-4;*/
+/*	}*/
+/*}*/
 
-.sheet {
-	@apply rounded-bl-xl rounded-tl-xl border-l border-gray-200 bg-white;
-	box-shadow: -9px 0 32px -6px rgba(0, 0, 0, 0.1);
-}
+/*.sheet {*/
+/*	@apply rounded-bl-xl rounded-tl-xl border-l border-gray-200 bg-white;*/
+/*	box-shadow: -9px 0 32px -6px rgba(0, 0, 0, 0.1);*/
+/*}*/
 
-.overlay-backdrop {
-	background-color: rgba(0, 0, 0, 0.3);
-}
+/*.overlay-backdrop {*/
+/*	background-color: rgba(0, 0, 0, 0.3);*/
+/*}*/
 
-.modal {
-	@apply rounded-xl border border-gray-200 bg-white;
-	box-shadow: -9px 0 32px -6px rgba(0, 0, 0, 0.1);
-}
+/*.modal {*/
+/*	@apply rounded-xl border border-gray-200 bg-white;*/
+/*	box-shadow: -9px 0 32px -6px rgba(0, 0, 0, 0.1);*/
+/*}*/
 
-@keyframes fade-in {
-	from {
-		opacity: 0;
-	}
-}
+/*@keyframes fade-in {*/
+/*	from {*/
+/*		opacity: 0;*/
+/*	}*/
+/*}*/
 
-@keyframes fade-out {
-	to {
-		opacity: 0;
-	}
-}
+/*@keyframes fade-out {*/
+/*	to {*/
+/*		opacity: 0;*/
+/*	}*/
+/*}*/

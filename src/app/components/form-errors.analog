@@ -1,0 +1,20 @@
+<script lang="ts">
+	import { input } from '@angular/core';
+	import type { ValidationError } from '@tanstack/form-core';
+
+	const errors = input<ValidationError[]>([]);
+</script>
+
+<template>
+	@if (errors().length) {
+		<ul>
+			@for (error of errors(); track error) {
+				<li>
+					<small class="text-sm text-red-500">
+						{{ error }}
+					</small>
+				</li>
+			}
+		</ul>
+	}
+</template>
