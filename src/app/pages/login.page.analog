@@ -1,12 +1,14 @@
 <script lang="ts">
-	import type { RouteMeta } from '@analogjs/router';
 	import { HttpClient } from '@angular/common/http';
-	import { inject, signal } from '@angular/core';
+	import { inject, NgZone, signal } from '@angular/core';
+	import { Router } from '@angular/router';
 	import { injectForm, injectStore } from '@tanstack/angular-form';
 	import { zodValidator } from '@tanstack/zod-form-adapter';
 	import type { LoginHandlerResponse } from '../../server/routes/users/login.post';
+	import { authGuard } from '../guards/auth.guard';
 	import { AuthStore } from '../stores/auth.store';
 	import type { FlagsyHttpErrorResponse } from '../utils/http-error-response';
+	import { navigationEntries } from '../utils/navigation-entry';
 	import { routeTitle } from '../utils/route-title';
 
 	import { ButtonModule } from 'primeng/button' with { analog: 'imports' };
@@ -20,11 +22,14 @@
 	} from '../utils/forms.schema' with { analog: 'exposes' };
 	import FormErrors from '../components/form-errors.analog' with { analog: 'imports' };
 
-	export const routeMeta: RouteMeta = {
-		title: routeTitle('Login'),
+	export const routeMeta = {
+		title: routeTitle(navigationEntries.login.title),
+		canMatch: [authGuard(false)],
 	};
 
 	const http = inject(HttpClient);
+	const router = inject(Router);
+	const zone = inject(NgZone);
 	const authStore = inject(AuthStore);
 
 	const form = injectForm({
@@ -48,6 +53,9 @@
 			.subscribe({
 				next: ({ refreshJwt }) => {
 					authStore.setToken(refreshJwt);
+					zone.run(() => {
+						void router.navigate(['/']);
+					});
 				},
 				error: (err: FlagsyHttpErrorResponse) => {
 					formError.set(err.error.message);
@@ -164,7 +172,7 @@
 				<footer class="flex justify-center">
 					<div class="flex gap-1 text-xs">
 						<span>Don't have an account?</span>
-						<span class="font-semibold text-primary-500">
+						<span class="text-primary-500 font-semibold">
 							<a class="link" href="/signup">Create Account</a>
 						</span>
 					</div>

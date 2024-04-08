@@ -1,0 +1,12 @@
+<script lang="ts">
+	import { navigationEntries } from '../../utils/navigation-entry';
+	import { routeTitle } from '../../utils/route-title';
+
+	export const routeMeta = {
+		title: routeTitle(navigationEntries.membership.title),
+		data: navigationEntries.membership,
+		pathMatch: 'full',
+	};
+</script>
+
+<template>Hi memberships</template>

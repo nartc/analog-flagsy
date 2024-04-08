@@ -1,0 +1,16 @@
+<script lang="ts">
+	import { navigationEntries } from '../utils/navigation-entry';
+
+	import { RouterLink } from '@angular/router' with { analog: 'imports' };
+
+	const navigations = [navigationEntries.membership];
+</script>
+<template>
+	<ul>
+		@for (navigation of navigations; track navigation.path) {
+			<li>
+				<a [routerLink]="navigation.path">{{ navigation.title }}</a>
+			</li>
+		}
+	</ul>
+</template>

@@ -1,0 +1,7 @@
+<script lang="ts">
+	export const routeMeta = {
+		pathMatch: 'full',
+	};
+</script>
+
+<template>test home</template>

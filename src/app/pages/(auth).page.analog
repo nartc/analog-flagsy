@@ -1,0 +1,21 @@
+<script lang="ts">
+	import { authGuard } from '../guards/auth.guard';
+
+	import { RouterOutlet } from '@angular/router' with { analog: 'imports' };
+	import Sidebar from '../components/sidebar.analog' with { analog: 'imports' };
+
+	export const routeMeta = {
+		canActivate: [authGuard(true)],
+	};
+</script>
+
+<template>
+	<div class="grid grid-cols-12">
+		<aside class="col-span-4">
+			<Sidebar />
+		</aside>
+		<main class="col-span-8">
+			<router-outlet />
+		</main>
+	</div>
+</template>
