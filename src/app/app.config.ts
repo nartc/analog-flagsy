@@ -8,7 +8,10 @@ import {
 	inject,
 } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { withComponentInputBinding } from '@angular/router';
+import {
+	withComponentInputBinding,
+	withViewTransitions,
+} from '@angular/router';
 import { PureAbility } from '@casl/ability';
 import { createPrismaAbility } from '@casl/prisma';
 import { LoadingBarRouterModule } from '@ngx-loading-bar/router';
@@ -22,7 +25,10 @@ import { injectAppAbility } from './utils/inject-app-ability';
 export const appConfig: ApplicationConfig = {
 	providers: [
 		{ provide: PureAbility, useValue: createPrismaAbility([]) },
-		provideFileRouter(withComponentInputBinding()),
+		provideFileRouter(
+			withComponentInputBinding(),
+			withViewTransitions({ skipInitialTransition: true }),
+		),
 		provideHttpClient(withFetch()),
 		provideAnimationsAsync(),
 		provideRemixIcon(ICONS),

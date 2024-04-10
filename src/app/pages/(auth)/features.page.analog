@@ -3,9 +3,9 @@
 	import { routeTitle } from '../../utils/route-title';
 
 	export const routeMeta = {
-		pathMatch: 'full',
-		title: routeTitle(navigationEntries.home.title),
+		title: routeTitle(navigationEntries.feature.title),
+		data: navigationEntries.feature,
 	};
 </script>
 
-<template>test home</template>
+<template>Hi features</template>

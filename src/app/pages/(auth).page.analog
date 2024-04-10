@@ -7,15 +7,17 @@
 	export const routeMeta = {
 		canActivate: [authGuard(true)],
 	};
+
+	defineMetadata({
+		host: { class: 'grid h-full grid-cols-12 gap-2 bg-slate-200 p-2' },
+	});
 </script>
 
 <template>
-	<div class="grid grid-cols-12">
-		<aside class="col-span-4">
-			<Sidebar />
-		</aside>
-		<main class="col-span-8">
-			<router-outlet />
-		</main>
-	</div>
+	<aside class="col-span-3 rounded-lg bg-white">
+		<Sidebar />
+	</aside>
+	<main class="col-span-9 rounded-lg bg-white">
+		<router-outlet />
+	</main>
 </template>

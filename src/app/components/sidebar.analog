@@ -1,16 +1,73 @@
 <script lang="ts">
+	import { MenuItem } from 'primeng/api';
 	import { navigationEntries } from '../utils/navigation-entry';
 
+	import { AngularRemixIconComponent } from 'angular-remix-icon' with { analog: 'imports' };
+	import { SharedModule } from 'primeng/api' with { analog: 'imports' };
+	import { MenuModule } from 'primeng/menu' with { analog: 'imports' };
+	import { NgOptimizedImage } from '@angular/common' with { analog: 'imports' };
 	import { RouterLink } from '@angular/router' with { analog: 'imports' };
 
-	const navigations = [navigationEntries.membership];
+	defineMetadata({
+		host: { class: 'flex flex-col justify-center gap-4 p-4' },
+	});
+
+	const menuItems: MenuItem[] = [
+		navigationEntries.home,
+		navigationEntries.membership,
+		navigationEntries.environment,
+		navigationEntries.feature,
+		navigationEntries.changelog,
+	].map(({ path, title, icon, activeIcon }) => ({
+		id: path,
+		title,
+		icon,
+		activeIcon,
+	}));
 </script>
+
 <template>
-	<ul>
-		@for (navigation of navigations; track navigation.path) {
-			<li>
-				<a [routerLink]="navigation.path">{{ navigation.title }}</a>
-			</li>
-		}
-	</ul>
+	<div class="relative h-10">
+		<img ngSrc="/images/logo-full.svg" alt="logo" fill priority />
+	</div>
+
+	<p-menu [model]="menuItems" styleClass="w-full border-none">
+		<div
+			*pTemplate="'item'; let item"
+			class="flex items-center gap-2 rounded-xl p-2"
+			[class.bg-slate-100]="activeLink.isActive"
+		>
+			<rmx-icon
+				class="!h-5 !w-5 transition-colors duration-200 ease-in-out"
+				[name]="activeLink.isActive ? item.activeIcon : item.icon"
+				[class.text-blue-500]="activeLink.isActive"
+			/>
+			<a
+				#activeLink="routerLinkActive"
+				class="transition-colors duration-200 ease-in-out"
+				routerLinkActive="text-blue-500"
+				[routerLink]="item.id"
+				[title]="item.title"
+				[routerLinkActiveOptions]="{ exact: true }"
+			>
+				{{ item.title }}
+			</a>
+		</div>
+	</p-menu>
 </template>
+
+<style>
+	:host ::ng-deep {
+		.p-menu {
+			ul {
+				display: flex;
+				flex-direction: column;
+				gap: 0.5rem;
+			}
+
+			.p-menuitem > .p-menuitem-content {
+				border-radius: 0.75rem;
+			}
+		}
+	}
+</style>

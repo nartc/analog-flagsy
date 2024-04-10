@@ -5,7 +5,6 @@
 	export const routeMeta = {
 		title: routeTitle(navigationEntries.membership.title),
 		data: navigationEntries.membership,
-		pathMatch: 'full',
 	};
 </script>
 

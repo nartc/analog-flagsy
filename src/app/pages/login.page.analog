@@ -4,7 +4,9 @@
 	import { Router } from '@angular/router';
 	import { injectForm, injectStore } from '@tanstack/angular-form';
 	import { zodValidator } from '@tanstack/zod-form-adapter';
+	import { exhaustMap, map, tap } from 'rxjs';
 	import type { LoginHandlerResponse } from '../../server/routes/users/login.post';
+	import { MeHandlerResponse } from '../../server/routes/users/me.get';
 	import { authGuard } from '../guards/auth.guard';
 	import { AuthStore } from '../stores/auth.store';
 	import type { FlagsyHttpErrorResponse } from '../utils/http-error-response';
@@ -27,6 +29,10 @@
 		canMatch: [authGuard(false)],
 	};
 
+	defineMetadata({
+		host: { class: 'grid h-screen grid-cols-1 md:grid-cols-2' },
+	});
+
 	const http = inject(HttpClient);
 	const router = inject(Router);
 	const zone = inject(NgZone);
@@ -36,8 +42,6 @@
 		defaultValues: { email: '', password: '', rememberMe: false },
 		validatorAdapter: zodValidator,
 	});
-
-	form.mount();
 
 	const canSubmit = injectStore(form, (state) => state.canSubmit);
 	const isTouched = injectStore(form, (state) => state.isTouched);
@@ -50,12 +54,18 @@
 
 		http
 			.post<LoginHandlerResponse>('/api/users/login', form.state.values)
+			.pipe(
+				exhaustMap(({ refreshJwt }) =>
+					http
+						.get<MeHandlerResponse>('/api/users/me', { withCredentials: true })
+						.pipe(map((user) => [user, refreshJwt])),
+				),
+			)
 			.subscribe({
-				next: ({ refreshJwt }) => {
+				next: ([user, refreshJwt]) => {
 					authStore.setToken(refreshJwt);
-					zone.run(() => {
-						void router.navigate(['/']);
-					});
+					authStore.setMe(user);
+					zone.run(() => void router.navigate(['/'], { replaceUrl: true }));
 				},
 				error: (err: FlagsyHttpErrorResponse) => {
 					formError.set(err.error.message);
@@ -65,119 +75,113 @@
 </script>
 
 <template>
-	<div class="grid h-screen grid-cols-1 md:grid-cols-2">
-		<section
-			class="hidden h-full w-full md:block"
-			style="background-color: var(--primary-color)"
-		></section>
-		<section class="flex items-center justify-center">
-			<div class="flex flex-col">
-				<header class="flex flex-col items-center justify-center gap-6">
-					<img src="/images/logo-full.svg" alt="Flagsy" class="h-10" />
-					<div class="flex flex-col items-center gap-2">
-						<h2 class="text-3xl font-bold">Welcome Back!</h2>
-						<p>Please login to continue</p>
-						@if (formError(); as formError) {
-							<p class="text-sm text-red-500">{{ formError }}</p>
-						}
-					</div>
-				</header>
+	<section
+		class="hidden h-full w-full md:block"
+		style="background-color: var(--primary-color)"
+	></section>
+	<section class="flex items-center justify-center">
+		<div class="flex flex-col">
+			<header class="flex flex-col items-center justify-center gap-6">
+				<img src="/images/logo-full.svg" alt="Flagsy" class="h-10" />
+				<div class="flex flex-col items-center gap-2">
+					<h2 class="text-3xl font-bold">Welcome Back!</h2>
+					<p>Please login to continue</p>
+					@if (formError(); as formError) {
+						<p class="text-sm text-red-500">{{ formError }}</p>
+					}
+				</div>
+			</header>
 
-				<form
-					class="flex min-h-0 w-96 max-w-lg flex-auto flex-col gap-4 overflow-y-auto p-6"
-					(submit)="handleSubmit($event)"
+			<form
+				class="flex min-h-0 w-96 max-w-lg flex-auto flex-col gap-4 overflow-y-auto p-6"
+				(submit)="handleSubmit($event)"
+			>
+				<div
+					class="flex flex-col gap-2"
+					[tanstackField]="form"
+					[validators]="{ onBlur: emailValidator }"
+					name="email"
+					#email="field"
 				>
-					<div
-						class="flex flex-col gap-2"
+					<label for="email" class="text-sm font-medium">Email</label>
+					<input
+						pInputText
+						id="email"
+						type="text"
+						placeholder="abc@xyz.io"
+						[class]="
+							email.api.state.meta.errors.length ? 'ng-invalid ng-dirty' : ''
+						"
+						[name]="email.name"
+						[value]="email.api.state.value"
+						(blur)="email.api.handleBlur()"
+						(input)="email.api.handleChange($event.target['value'])"
+					/>
+
+					<FormErrors [errors]="email.api.state.meta.errors" />
+				</div>
+
+				<div
+					class="flex flex-col gap-2"
+					[tanstackField]="form"
+					[validators]="{ onBlur: passwordValidator }"
+					name="password"
+					#password="field"
+				>
+					<label for="password" class="text-sm font-medium">Password</label>
+					<input
+						pInputText
+						id="password"
+						type="password"
+						placeholder="********"
+						[class]="
+							password.api.state.meta.errors.length ? 'ng-invalid ng-dirty' : ''
+						"
+						[name]="password.name"
+						[value]="password.api.state.value"
+						(blur)="password.api.handleBlur()"
+						(input)="password.api.handleChange($event.target['value'])"
+					/>
+					<FormErrors [errors]="password.api.state.meta.errors" />
+				</div>
+
+				<footer class="flex items-center justify-between text-xs font-semibold">
+					<ng-container
 						[tanstackField]="form"
-						[validators]="{ onBlur: emailValidator }"
-						name="email"
-						#email="field"
+						#rememberMe="field"
+						name="rememberMe"
 					>
-						<label for="email" class="text-sm font-medium">Email</label>
-						<input
-							pInputText
-							id="email"
-							type="text"
-							placeholder="abc@xyz.io"
-							[class]="
-								email.api.state.meta.errors.length ? 'ng-invalid ng-dirty' : ''
-							"
-							[name]="email.name"
-							[value]="email.api.state.value"
-							(blur)="email.api.handleBlur()"
-							(input)="email.api.handleChange($event.target['value'])"
+						<p-checkbox
+							label="Remember Me"
+							[value]="rememberMe.api.state.value"
+							[binary]="true"
+							(onChange)="rememberMe.api.handleChange($event.checked)"
 						/>
+					</ng-container>
 
-						<FormErrors [errors]="email.api.state.meta.errors" />
-					</div>
-
-					<div
-						class="flex flex-col gap-2"
-						[tanstackField]="form"
-						[validators]="{ onBlur: passwordValidator }"
-						name="password"
-						#password="field"
-					>
-						<label for="password" class="text-sm font-medium">Password</label>
-						<input
-							pInputText
-							id="password"
-							type="password"
-							placeholder="********"
-							[class]="
-								password.api.state.meta.errors.length
-									? 'ng-invalid ng-dirty'
-									: ''
-							"
-							[name]="password.name"
-							[value]="password.api.state.value"
-							(blur)="password.api.handleBlur()"
-							(input)="password.api.handleChange($event.target['value'])"
-						/>
-						<FormErrors [errors]="password.api.state.meta.errors" />
-					</div>
-
-					<footer
-						class="flex items-center justify-between text-xs font-semibold"
-					>
-						<ng-container
-							[tanstackField]="form"
-							#rememberMe="field"
-							name="rememberMe"
-						>
-							<p-checkbox
-								label="Remember Me"
-								[value]="rememberMe.api.state.value"
-								[binary]="true"
-								(onChange)="rememberMe.api.handleChange($event.checked)"
-							/>
-						</ng-container>
-
-						<div class="text-primary-500">
-							<a class="link" href="/signup">Forgot Password?</a>
-						</div>
-					</footer>
-
-					<button
-						pButton
-						pRipple
-						type="submit"
-						[class.cursor-not-allowed]="!canSubmit()"
-						[disabled]="!isTouched() || (isTouched() && !canSubmit())"
-						[label]="isSubmitting() ? '...' : 'Login'"
-						size="small"
-					></button>
-				</form>
-				<footer class="flex justify-center">
-					<div class="flex gap-1 text-xs">
-						<span>Don't have an account?</span>
-						<span class="text-primary-500 font-semibold">
-							<a class="link" href="/signup">Create Account</a>
-						</span>
+					<div class="text-primary-500">
+						<a class="link" href="/signup">Forgot Password?</a>
 					</div>
 				</footer>
-			</div>
-		</section>
-	</div>
+
+				<button
+					pButton
+					pRipple
+					type="submit"
+					[class.cursor-not-allowed]="!canSubmit()"
+					[disabled]="!isTouched() || (isTouched() && !canSubmit())"
+					[label]="isSubmitting() ? '...' : 'Login'"
+					size="small"
+				></button>
+			</form>
+			<footer class="flex justify-center">
+				<div class="flex gap-1 text-xs">
+					<span>Don't have an account?</span>
+					<span class="text-primary-500 font-semibold">
+						<a class="link" href="/signup">Create Account</a>
+					</span>
+				</div>
+			</footer>
+		</div>
+	</section>
 </template>
