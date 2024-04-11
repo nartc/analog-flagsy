@@ -61,9 +61,9 @@
     "@angular/cli": "^17.3.3",
     "@angular/compiler-cli": "^17.3.3",
     "@ngtools/webpack": "^17.3.3",
-    "@nx/angular": "~18.2.3",
-    "@nx/vite": "~18.2.3",
-    "@nx/workspace": "18.2.3",
+    "@nx/angular": "18.2.4",
+    "@nx/vite": "18.2.4",
+    "@nx/workspace": "18.2.4",
     "@schematics/angular": "^17.3.3",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.6",
@@ -71,7 +71,7 @@
     "jsdom": "^22.1.0",
     "mini-svg-data-uri": "^1.4.4",
     "nitropack": "2.9.5",
-    "nx": "18.2.3",
+    "nx": "18.2.4",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
     "prettier-plugin-organize-imports": "^3.2.4",
@@ -100,3 +100,4 @@
     ]
   }
 }
+
