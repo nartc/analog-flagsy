@@ -25,56 +25,42 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
-"@analogjs/content@^1.0.0":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@analogjs/content/-/content-1.0.2.tgz#edc8088b587320b21b07e06fbf2fa272ba5397fb"
-  integrity sha512-5V8bpJ85WgrbK/uM45XPIpz+4M6y5D2R9rAPO9bX9KH0ZwdnGmF0XFWqZLaFmO7Vk2LnctmLOaH3oyD94br5Tg==
+"@analogjs/content@^1.2.0-beta.4":
+  version "1.2.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@analogjs/content/-/content-1.2.0-beta.4.tgz#9e47fdfe0668d5bd7f464356ce8f6ab9bdd7c9ba"
+  integrity sha512-ciidnRCO4Ak9jlb2BpOYRQjy2q+4aObSLzUtiS6ULJAzt7BsrY4xmxZihQtaIbGIQPDOToOl1tiGkLTfU24O8A==
   dependencies:
     tslib "^2.3.0"
 
-"@analogjs/content@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@analogjs/content/-/content-1.1.2.tgz#29bfb0f5f83b98f8ee472c8b5dbdaa17fb0630ed"
-  integrity sha512-lYcx/YeE8btxmPQfa0uGwcnTHWdXVBJ850deJbFsaZVS+1S8bizRQbl4E013MP3Y/yEaOyXfDYINEu/zRIIrzg==
+"@analogjs/platform@^1.2.0-beta.4":
+  version "1.2.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@analogjs/platform/-/platform-1.2.0-beta.4.tgz#c71d17db31948ee07c1414a1f06ca34eaf6fb37b"
+  integrity sha512-ZdvvWooUqPetl3SNqTf0RYZwcXfvvw/qm9T6gKQt6brrTkj8EW0Vz5Vy6p7goZypP48uQ0yzA45Cv5jcRcFgCg==
   dependencies:
-    tslib "^2.3.0"
-
-"@analogjs/platform@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@analogjs/platform/-/platform-1.1.2.tgz#d9472e3387a201ea1de0d88fd83f9c659267d197"
-  integrity sha512-CfFd+781p35I7x68P837jk4veP6RfK2JW2soJLCb/iJ2C40HVwR5yyxzBZrTLhDRBr61O5vZBTJe6tX9cAjPcg==
-  dependencies:
-    "@analogjs/vite-plugin-angular" "^1.0.0"
-    "@analogjs/vite-plugin-nitro" "^1.0.0"
+    "@analogjs/vite-plugin-angular" "^1.2.0-beta.4"
+    "@analogjs/vite-plugin-nitro" "^1.2.0-beta.4"
     nitropack "^2.6.0"
 
-"@analogjs/router@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@analogjs/router/-/router-1.1.2.tgz#1ed9db84427f16f857fc7f2991cef5ad9e1e1f14"
-  integrity sha512-vdfQd7n3+PTCzsaOeAfQTzJHtBa7q73hCxilaiYHjjl9Z+mPpZJWVKE139Jgj6x+BXP/4vLQQvcMViiUxCXuBw==
+"@analogjs/router@^1.2.0-beta.4":
+  version "1.2.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@analogjs/router/-/router-1.2.0-beta.4.tgz#c1d9075941536f7866d765f76b699fb435d170a3"
+  integrity sha512-UG6UEiMv2Ez+n0LjNGTG4/E7HWb3ZuJ9CsSJ/WHl6727j+MVUZum9up/qj+DJuPGp5OgjnlAKk4HPR83Xc6C3g==
   dependencies:
     tslib "^2.0.0"
   optionalDependencies:
-    "@analogjs/content" "^1.0.0"
+    "@analogjs/content" "^1.2.0-beta.4"
 
-"@analogjs/vite-plugin-angular@^1.0.0":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@analogjs/vite-plugin-angular/-/vite-plugin-angular-1.0.2.tgz#d683a5329afe2e82269bb06af735d0cff09e685b"
-  integrity sha512-dC9/3OygJK+grTtFKLRQfOF3DGjw1w6h+TcKlpUenBtpuzrMAG6xZVwqGaSDnJ8igqAfU8vhkZ03LIDDMHk1Yg==
+"@analogjs/vite-plugin-angular@^1.2.0-beta.4":
+  version "1.2.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@analogjs/vite-plugin-angular/-/vite-plugin-angular-1.2.0-beta.4.tgz#60e9c59ced6cebef19a22ec6cb24f8f74a19569d"
+  integrity sha512-VsqsnUdOqJbLT9PXL1aEtY3H8MUgFaSkA5zOjdwt/RNxQhh2CbpH21KwbCanCpupp08xRx9Q4yMGNcTqS98euQ==
   dependencies:
     ts-morph "^21.0.0"
 
-"@analogjs/vite-plugin-angular@^1.1.2":
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/@analogjs/vite-plugin-angular/-/vite-plugin-angular-1.1.2.tgz#7b3a8e31cda2f9cfdd71b9938d7dfd07e789cc78"
-  integrity sha512-ELcnWlaJwOX8LGgwZuDfvKpK8sWPV1hYlt0qGJoUk5fpNHZGG8ww1wmM3f7qeTBXL9/YdMxUDkz93ZdsC7nrpA==
-  dependencies:
-    ts-morph "^21.0.0"
-
-"@analogjs/vite-plugin-nitro@^1.0.0":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@analogjs/vite-plugin-nitro/-/vite-plugin-nitro-1.0.2.tgz#25c2731f4916e94a2dec3323c221b0e6328da09e"
-  integrity sha512-wOf1z+hxtp4jSPEPbG92hgayR4+xWzYz47ICSVuOnZF14l5BrUoSOIAjkWedU6qUikhcu3UA00yxHRmd5iIbqw==
+"@analogjs/vite-plugin-nitro@^1.2.0-beta.4":
+  version "1.2.0-beta.4"
+  resolved "https://registry.yarnpkg.com/@analogjs/vite-plugin-nitro/-/vite-plugin-nitro-1.2.0-beta.4.tgz#d32e6429b4472a074e04a76cc0a52c48bf43d759"
+  integrity sha512-rt7o1LMPZKdTymDEezdIq7bSW75U533EsAEx8mFz6F+wcouJTPmU03vGq3xuKQ/HDsqj1BMrFecq5KcFIljiQQ==
   dependencies:
     nitropack "^2.6.0"
     xmlbuilder2 "^3.0.2"
