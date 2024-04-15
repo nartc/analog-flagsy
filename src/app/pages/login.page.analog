@@ -29,10 +29,6 @@
 		canMatch: [authGuard(false)],
 	};
 
-	defineMetadata({
-		host: { class: 'grid h-screen grid-cols-1 md:grid-cols-2' },
-	});
-
 	const http = inject(HttpClient);
 	const router = inject(Router);
 	const zone = inject(NgZone);
@@ -74,7 +70,7 @@
 	}
 </script>
 
-<template>
+<template class="grid h-screen grid-cols-1 md:grid-cols-2">
 	<section
 		class="hidden h-full w-full md:block"
 		style="background-color: var(--primary-color)"

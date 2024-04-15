@@ -1,11 +1,23 @@
 <script lang="ts">
+	import { inject } from '@angular/core';
+	import { OrganizationStore } from '../../stores/organization.store';
 	import { navigationEntries } from '../../utils/navigation-entry';
 	import { routeTitle } from '../../utils/route-title';
+
+	import { JsonPipe } from '@angular/common' with { analog: 'imports' };
 
 	export const routeMeta = {
 		pathMatch: 'full',
 		title: routeTitle(navigationEntries.home.title),
 	};
+
+	const organizationStore = inject(OrganizationStore);
+
+	const userOrganizations = organizationStore.userOrganizations;
 </script>
 
-<template>test home</template>
+<template>
+	@for (organization of userOrganizations(); track organization.id) {
+		<pre>{{ organization | json }}</pre>
+	}
+</template>

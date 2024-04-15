@@ -1,23 +1,47 @@
 <script lang="ts">
+	import { HttpClient } from '@angular/common/http';
+	import { effect, inject } from '@angular/core';
+	import type { OrgsHandlerResponse } from '../../server/routes/orgs/index.get';
 	import { authGuard } from '../guards/auth.guard';
+	import { OrganizationStore } from '../stores/organization.store';
 
 	import { RouterOutlet } from '@angular/router' with { analog: 'imports' };
+	import { ProgressSpinnerModule } from 'primeng/progressspinner' with { analog: 'imports' };
 	import Sidebar from '../components/sidebar.analog' with { analog: 'imports' };
 
 	export const routeMeta = {
 		canActivate: [authGuard(true)],
 	};
 
-	defineMetadata({
-		host: { class: 'grid h-full grid-cols-12 gap-2 bg-slate-200 p-2' },
+	const http = inject(HttpClient);
+	const organizationStore = inject(OrganizationStore);
+
+	effect((onCleanup) => {
+		const sub = http
+			.get<OrgsHandlerResponse>('/api/orgs', { withCredentials: true })
+			.subscribe(({ organizations }) => {
+				organizationStore.setUserOrganizations(organizations);
+			});
+
+		onCleanup(() => sub.unsubscribe());
 	});
 </script>
 
-<template>
-	<aside class="col-span-3 rounded-lg bg-white">
-		<Sidebar />
-	</aside>
-	<main class="col-span-9 rounded-lg bg-white">
-		<router-outlet />
-	</main>
+<template class="grid h-full grid-cols-12 gap-2 bg-slate-200 p-2">
+	@defer (
+		when !organizationStore.isLoading() && organizationStore.userOrganizations().length > 0
+	) {
+		<aside class="col-span-3 rounded-lg bg-white">
+			<Sidebar />
+		</aside>
+		<main class="col-span-9 rounded-lg bg-white">
+			<router-outlet />
+		</main>
+	} @placeholder (minimum 1s) {
+		<p-progressSpinner
+			class="col-span-12 flex h-full w-full items-center justify-center"
+			ariaLabel="Loading Organizations"
+			strokeWidth="4"
+		/>
+	}
 </template>
